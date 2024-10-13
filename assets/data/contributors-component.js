@@ -2,54 +2,65 @@ import { contributorsArray } from "./contributors.js"
 
 const contributorSection = document.getElementById("contributors-main-section")
 
-
 // Function to run through all contributors in contributorsArray and create their card from the below template literal
-function getContributors() {
+(function appendContributorsHtml() {
+    console.log(renderContributorsHtml())
+    contributorSection.innerHTML = `${[...renderContributorsHtml()]}`
+})()
+
+function renderContributorsHtml() {
     let contributors = ''
-    
-    contributorsArray.forEach(function (contributor) {
-        
-        contributors += `
-            <article class="contributor-card">
+    let contributorsHtmlArr = []
 
-                <h2>${contributor.name}</h2>
-                <br>
-                <div class="img-container">
+    contributorsHtmlArr = contributorsArray.map(contributor => {
+        renderAvatarHtml()
+        renderGitHubHtml(contributor.gitHub)
+        renderLinkedInHtml(contributor.linkedIn)
 
-                <!-- Checks if contributors avatar exists, if not renders default picture -->
-                    ${ contributor.avatar ? `
-                    <img class="contributor-avatar" src="${contributor.avatar}" alt="${contributor.alt}"/>`
-                : `<img class="contributor-avatar" src="/assets/images/contributors/placeholder-avatar.jpg" alt="placeholder avatar"/>`}
-                
-                </div>
-                <br>
-                <h3>Find this contributor on:</h3>
-                <div class="social-links"  />
-                
-                <!-- Checks if gitHub link exists, only renders icon if present -->
-                    ${ contributor.gitHub ? `
-                    <a href="${contributor.gitHub}" class="contributor-github" aria-label="github">
-                        
-                        <i class="fa-brands fa-github social-icon fa-2x" aria-hidden="true" ></i>
-                    </a>`: '' }
-                
-                <!-- Checks if linkedIn link exists, only renders icon if present  -->
-                    ${contributor.linkedIn ? `
-                        <a href="${contributor.linkedIn}" aria-label="linked-in">
-                            <i class="fa-brands fa-linkedin-in fa-2x social-icon" aria-hidden="true"></i>
-                        </a>
-                    ` : ''}
-                </div>
-            </article>
+        return `<article class="contributor-card">
+
+                    <h2>${contributor.name}</h2>
+                    <br />
+
+                    <div class="avatar-container">
+                        ${contributorAvatar}
+                    </div>
+
+                    <br />
+
+                    <h3>Find this contributor on:</h3>
+                    <span class="social-links">
+                        ${gitHub}
+                        ${linkedIn}
+                    </span>
+                </article>
             `
-        })
-    
-    return contributors
+    })
+
+    return contributorsHtmlArr
 }
 
-
-function renderContributors() {
-    contributorSection.innerHTML = getContributors()
+function renderAvatarHtml(avatarSrc, avatarAlt) {
+    let contributorAvatar = ''
+    if (contributor.avatar) {
+        contributorAvatar = `<img class="contributor-avatar" src="${avatarSrc}" alt="${avatarAlt}" />`
+    } else {
+        contributorAvatar = `<img class="contributor-avatar" src="/assets/images/contributors/placeholder-avatar.jpg" alt="placeholder avatar"/>`
+    }
 }
 
-renderContributors()
+function renderLinkedInHtml(linkedInUrl) {
+    let linkedIn = ''
+    if (contributor.linkedIn) {
+        linkedIn = `<a href="${linkedInUrl}" aria-label="linked-in">
+                        <i class="fa-brands fa-linkedin-in fa-2x social-icon" aria-hidden="true"></i>
+                    </a>`
+    }
+}
+
+function renderGitHubHtml(gitHubUrl) {
+    let gitHub = ''
+    if (gitHubUrl) {
+        gitHub = `<a href="${gitHubUrl}" class="contributor-github" aria-label="github">`
+    }
+}
