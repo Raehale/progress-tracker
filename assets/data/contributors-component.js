@@ -1,21 +1,18 @@
 import { contributorsArray } from "./contributors.js"
 
-const contributorSection = document.getElementById("contributors-main-section")
-
-// Function to run through all contributors in contributorsArray and create their card from the below template literal
+//adds contributors html to page
 (function appendContributorsHtml() {
-    console.log(renderContributorsHtml())
-    contributorSection.innerHTML = `${[...renderContributorsHtml()]}`
+    document.getElementById('contributors-main-section').innerHTML = `${[...renderContributorsHtml()].join('')}`
 })()
 
+//itterates through contributors arr and creates contributor card HTML for each adding them to an arr
 function renderContributorsHtml() {
-    let contributors = ''
     let contributorsHtmlArr = []
 
     contributorsHtmlArr = contributorsArray.map(contributor => {
-        renderAvatarHtml()
-        renderGitHubHtml(contributor.gitHub)
-        renderLinkedInHtml(contributor.linkedIn)
+        const contributorAvatar = renderAvatarHtml(contributor.avatar, contributor.alt)
+        const contributorGitHub = renderGitHubHtml(contributor.gitHub)
+        const contributorLinkedIn = renderLinkedInHtml(contributor.linkedIn)
 
         return `<article class="contributor-card">
 
@@ -30,8 +27,8 @@ function renderContributorsHtml() {
 
                     <h3>Find this contributor on:</h3>
                     <span class="social-links">
-                        ${gitHub}
-                        ${linkedIn}
+                        ${contributorGitHub}
+                        ${contributorLinkedIn}
                     </span>
                 </article>
             `
@@ -40,27 +37,33 @@ function renderContributorsHtml() {
     return contributorsHtmlArr
 }
 
+//renders avatar or placeholder
 function renderAvatarHtml(avatarSrc, avatarAlt) {
-    let contributorAvatar = ''
-    if (contributor.avatar) {
-        contributorAvatar = `<img class="contributor-avatar" src="${avatarSrc}" alt="${avatarAlt}" />`
+    if (avatarSrc) {
+        return `<img class="contributor-avatar" src="${avatarSrc}" alt="${avatarAlt}" />`
     } else {
-        contributorAvatar = `<img class="contributor-avatar" src="/assets/images/contributors/placeholder-avatar.jpg" alt="placeholder avatar"/>`
+        return `<img class="contributor-avatar" src="/assets/images/contributors/placeholder-avatar.jpg" alt="placeholder avatar" />`
     }
 }
 
+//renders LinkedIn or emtpy string
 function renderLinkedInHtml(linkedInUrl) {
-    let linkedIn = ''
-    if (contributor.linkedIn) {
-        linkedIn = `<a href="${linkedInUrl}" aria-label="linked-in">
-                        <i class="fa-brands fa-linkedin-in fa-2x social-icon" aria-hidden="true"></i>
-                    </a>`
+    if (linkedInUrl) {
+        return `<a href="${linkedInUrl}" aria-label="linked-in">
+                    <i class="fa-brands fa-linkedin-in fa-2x social-icon" aria-hidden="true"></i>
+                </a>`
+    } else {
+        return ''
     }
 }
 
+//renders GitHub or empty string
 function renderGitHubHtml(gitHubUrl) {
-    let gitHub = ''
     if (gitHubUrl) {
-        gitHub = `<a href="${gitHubUrl}" class="contributor-github" aria-label="github">`
+        return `<a href="${gitHubUrl}" class="contributor-github" aria-label="github">
+                    <i class="fa-brands fa-github social-icon fa-2x" aria-hidden="true" ></i>
+                </a>`
+    } else {
+        return ''
     }
 }
